@@ -77,7 +77,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Welcome!
             </h2>
             <p className="auth-modal-description">
-              Sign in with Google to start tracking your pet's health journey
+              Sign in with Google to start tracking your pet&apos;s health journey
             </p>
           </div>
 

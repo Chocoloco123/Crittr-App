@@ -8,19 +8,11 @@ import Image from 'next/image'
 import { 
   Plus, 
   Calendar, 
-  BarChart3, 
   Bell, 
-  Settings, 
-  User,
   Heart,
   Activity,
-  TrendingUp,
   Clock,
-  Home,
-  LogOut,
   Bot,
-  Users,
-  Shield,
   ArrowRight,
   ChevronRight
 } from 'lucide-react'
@@ -33,7 +25,7 @@ import './page.scss'
 export default function Dashboard() {
   const { data: session, status } = useSession()
   const [mounted, setMounted] = useState(false)
-  const [dashboardData, setDashboardData] = useState<any>(null)
+  const [dashboardData, setDashboardData] = useState<Record<string, unknown> | null>(null)
   
   // Available pet icons
   const petIcons = [
@@ -55,7 +47,7 @@ export default function Dashboard() {
     setMounted(true)
     
     // Load dashboard data from demo storage
-    const savedData = DemoStorage.getItem<any>('dashboard-data')
+    const savedData = DemoStorage.getItem<Record<string, unknown>>('dashboard-data')
     if (savedData) {
       setDashboardData(savedData)
     }
@@ -68,7 +60,7 @@ export default function Dashboard() {
     }
   }, [dashboardData, mounted])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 
@@ -109,12 +101,12 @@ export default function Dashboard() {
   ]
 
   // Fetch journal entries for recent activities
-  const [journalEntries, setJournalEntries] = useState<any[]>([])
+  const [journalEntries, setJournalEntries] = useState<Array<Record<string, unknown>>>([])
   
   useEffect(() => {
     if (mounted) {
       // Fetch journal entries from demo storage
-      const entries = DemoStorage.getItem<any[]>('journal-entries') || []
+      const entries = DemoStorage.getItem<Array<Record<string, unknown>>>('journal-entries') || []
       setJournalEntries(entries)
     }
   }, [mounted])
@@ -138,7 +130,7 @@ export default function Dashboard() {
       icon: Activity
     }))
 
-  const userUpcomingReminders: any[] = []
+  const userUpcomingReminders: Array<{ id: string; title: string; pet?: string; time: string }> = []
 
   // Use demo data if not authenticated, user data if authenticated
   const stats = session ? userStats : demoStats
@@ -236,7 +228,7 @@ export default function Dashboard() {
                     {isDemoMode ? (
                       <>Explore our pet care platform with sample data. Experience the full features before creating your account!</>
                     ) : (
-                      <>Here's what's happening with your pets today. Let's keep them happy and healthy together!</>
+                      <>Here&apos;s what&apos;s happening with your pets today. Let&apos;s keep them happy and healthy together!</>
                     )}
                   </p>
                   
@@ -406,15 +398,15 @@ export default function Dashboard() {
                       </div>
                       <div className="dashboard-activity-content">
                         <p className="dashboard-activity-title">
-                          {(activity as any).activity || (activity as any).description} - {(activity as any).pet || 'Your Pet'}
+                          {(activity as { activity?: string; description?: string; pet?: string }).activity || (activity as { activity?: string; description?: string }).description} - {(activity as { pet?: string }).pet || 'Your Pet'}
                         </p>
                         <p className="dashboard-activity-time">
                           {activity.time}
                         </p>
                       </div>
-                      <span className="dashboard-activity-type">
-                        {(activity as any).type || 'Activity'}
-                      </span>
+                        <span className="dashboard-activity-type">
+                          {(activity as { type?: string }).type || 'Activity'}
+                        </span>
                     </motion.div>
                   ))
                 ) : (
@@ -423,7 +415,7 @@ export default function Dashboard() {
                       <Activity className="h-8 w-8 text-gray-400" />
                     </div>
                     <h3 className="dashboard-empty-title">No activities yet</h3>
-                    <p className="dashboard-empty-description">Start tracking your pet's activities to see them here.</p>
+                    <p className="dashboard-empty-description">Start tracking your pet&apos;s activities to see them here.</p>
                     <Link 
                       href="/quick-log" 
                       className="dashboard-empty-button"
@@ -485,7 +477,7 @@ export default function Dashboard() {
                       <Clock className="h-8 w-8 text-gray-400" />
                     </div>
                     <h3 className="dashboard-empty-title">No reminders set</h3>
-                    <p className="dashboard-empty-description">Set up reminders to keep track of your pet's schedule.</p>
+                    <p className="dashboard-empty-description">Set up reminders to keep track of your pet&apos;s schedule.</p>
                     <Link 
                       href="/dashboard/reminders" 
                       className="dashboard-empty-button"

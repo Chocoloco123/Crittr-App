@@ -45,7 +45,7 @@ export default function SignIn() {
             Welcome Back
           </h1>
           <p className="text-gray-600">
-            Sign in with Google to continue your pet's care journey
+            Sign in with Google to continue your pet&apos;s care journey
           </p>
         </div>
 

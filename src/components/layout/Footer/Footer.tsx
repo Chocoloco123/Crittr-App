@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Heart, ArrowRight, Twitter, Facebook, Instagram, Github } from 'lucide-react'
+import { ArrowRight, Twitter, Facebook, Instagram, Github } from 'lucide-react'
 import Image from 'next/image'
 import './Footer.scss'
 
@@ -61,7 +61,7 @@ export default function Footer() {
                   🐾 Crittr
                 </h3>
                 <p className="logo-description">
-                  Pet health & journaling. Monitor your pet's health, track daily activities, and maintain detailed records for better veterinary care.
+                  Pet health & journaling. Monitor your pet&apos;s health, track daily activities, and maintain detailed records for better veterinary care.
                 </p>
               </div>
 
@@ -196,7 +196,7 @@ export default function Footer() {
             <p className="disclaimer-text">
               <strong>Disclaimer:</strong> Crittr is not a licensed veterinary service. AI insights are for informational purposes only. 
               Always consult a licensed veterinarian for medical advice. We are not liable for health decisions 
-              made based on our platform's information.
+              made based on our platform&apos;s information.
             </p>
           </div>
         </motion.div>

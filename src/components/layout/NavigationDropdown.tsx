@@ -22,7 +22,7 @@ interface NavigationDropdownProps {
   currentPage?: string
 }
 
-export default function NavigationDropdown({ currentPage }: NavigationDropdownProps) {
+export default function NavigationDropdown({ currentPage: _currentPage }: NavigationDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()

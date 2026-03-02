@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(_request: NextRequest) {
   try {
     console.log('DELETE /api/users/me - Starting request')
     
@@ -20,7 +20,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Get the user ID from the session - try different possible locations
-    const userId = (session.user as any).id || (session as any).userId
+    const userId = (session.user as { id?: string }).id || (session as { userId?: string }).userId
     console.log('User ID from session:', userId)
     
     if (!userId) {

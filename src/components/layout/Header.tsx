@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Menu, X, User, LogIn, ArrowRight, Heart, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
@@ -27,7 +28,7 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center h-16">
-              <a 
+              <Link 
                 href="/" 
                 className="flex items-center space-x-3 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors group h-full"
                 aria-label="Crittr - Home"
@@ -44,7 +45,7 @@ export default function Header() {
                   <span className="text-primary-600 font-bold text-lg leading-tight">Crittr</span>
                   <span className="text-xs text-gray-500 font-normal leading-tight">Pet Care & Journaling</span>
                 </div>
-              </a>
+              </Link>
             </div>
             
             {/* Loading state */}
@@ -77,7 +78,7 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center h-16">
-              <a 
+              <Link 
                 href="/" 
                 className="flex items-center space-x-3 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors group h-full"
                 aria-label="Crittr - Home"
@@ -94,7 +95,7 @@ export default function Header() {
                   <span className="text-primary-600 font-bold text-lg leading-tight">Crittr</span>
                   <span className="text-xs text-gray-500 font-normal leading-tight">Pet Care & Journaling</span>
                 </div>
-              </a>
+              </Link>
             </div>
 
             {/* Desktop Navigation */}

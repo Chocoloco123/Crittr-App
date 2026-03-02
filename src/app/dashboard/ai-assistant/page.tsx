@@ -9,17 +9,17 @@ import { DemoStorage } from '@/lib/demoStorage'
 import './page.scss'
 
 export default function AIAssistantPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [selectedPetId, setSelectedPetId] = useState<string>('')
   const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const [conversations, setConversations] = useState<any[]>([])
+  const [conversations, setConversations] = useState<Array<Record<string, unknown>>>([])
 
   useEffect(() => {
     setMounted(true)
     
     // Load AI conversations from demo storage
-    const savedConversations = DemoStorage.getItem<any[]>('ai-conversations')
+    const savedConversations = DemoStorage.getItem<Array<Record<string, unknown>>>('ai-conversations')
     if (savedConversations) {
       setConversations(savedConversations)
     }
@@ -32,7 +32,7 @@ export default function AIAssistantPage() {
     }
   }, [conversations, mounted])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 

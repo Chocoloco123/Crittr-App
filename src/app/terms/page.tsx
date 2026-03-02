@@ -25,14 +25,14 @@ export default function TermsOfService() {
             <section className="terms-section">
               <h2 className="terms-section-title">1. Acceptance of Terms</h2>
               <p className="terms-text">
-                By accessing and using Crittr ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                By accessing and using Crittr (&quot;the Service&quot;), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
               </p>
             </section>
 
             <section className="terms-section">
               <h2 className="terms-section-title">2. Description of Service</h2>
               <p className="terms-text">
-                Crittr is a pet health tracking application that allows users to monitor their pets' health, log activities, set reminders, and maintain health records. The service is provided "as is" and we make no warranties regarding its availability or functionality.
+                Crittr is a pet health tracking application that allows users to monitor their pets&apos; health, log activities, set reminders, and maintain health records. The service is provided &quot;as is&quot; and we make no warranties regarding its availability or functionality.
               </p>
             </section>
 

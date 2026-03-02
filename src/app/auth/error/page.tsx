@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { AlertCircle, ArrowLeft, Home } from 'lucide-react'
+import { AlertCircle, Home } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'

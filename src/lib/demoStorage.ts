@@ -14,7 +14,7 @@ interface StoredData<T> {
 }
 
 // Cache for SSR to prevent hydration mismatches
-const ssrCache = new Map<string, any>()
+const ssrCache = new Map<string, unknown>()
 
 export class DemoStorage {
   /**
@@ -169,7 +169,7 @@ export class DemoStorage {
       const stored = localStorage.getItem(`${DEMO_STORAGE_PREFIX}${key}`)
       if (!stored) return 0
 
-      const storedData: StoredData<any> = JSON.parse(stored)
+      const storedData: StoredData<Record<string, unknown>> = JSON.parse(stored)
       const now = Date.now()
       const remaining = storedData.expiresAt - now
 

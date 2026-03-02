@@ -9,17 +9,17 @@ import { DemoStorage } from '@/lib/demoStorage'
 import './page.scss'
 
 export default function AnalyticsPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [selectedPetId, setSelectedPetId] = useState<string>('')
   const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const [analyticsData, setAnalyticsData] = useState<any>(null)
+  const [analyticsData, setAnalyticsData] = useState<Record<string, unknown> | null>(null)
 
   useEffect(() => {
     setMounted(true)
     
     // Load analytics data from demo storage
-    const savedData = DemoStorage.getItem<any>('analytics-data')
+    const savedData = DemoStorage.getItem<Record<string, unknown>>('analytics-data')
     if (savedData) {
       setAnalyticsData(savedData)
     }
@@ -32,7 +32,7 @@ export default function AnalyticsPage() {
     }
   }, [analyticsData, mounted])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 
@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
         {/* Analytics Header */}
         <div className="analytics-header">
           <h1 className="analytics-title">📊 Analytics</h1>
-          <p className="analytics-subtitle">Track your pet's health trends and insights</p>
+          <p className="analytics-subtitle">Track your pet&apos;s health trends and insights</p>
         </div>
 
         {/* Pet Selection */}

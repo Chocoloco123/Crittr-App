@@ -104,12 +104,12 @@ export default function JournalEditor({
   // Ensure initial data is loaded when component mounts or initialData changes
   useEffect(() => {
     if (initialData) {
-      setTitle(initialData.title)
-      setContent(initialData.content)
-      setEntryType(initialData.entryType)
+      setTitle(initialData.title ?? '')
+      setContent(initialData.content ?? '')
+      setEntryType(initialData.entryType ?? 'general')
       setAttachments(initialData.attachments || [])
       if (editorRef.current) {
-        editorRef.current.innerHTML = initialData.content
+        editorRef.current.innerHTML = initialData.content ?? ''
       }
     }
   }, [initialData])

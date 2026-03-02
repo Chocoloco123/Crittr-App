@@ -9,17 +9,17 @@ import { DemoStorage } from '@/lib/demoStorage'
 import './page.scss'
 
 export default function SocialPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [selectedPetId, setSelectedPetId] = useState<string>('')
   const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const [socialData, setSocialData] = useState<any>(null)
+  const [socialData, setSocialData] = useState<Record<string, unknown> | null>(null)
 
   useEffect(() => {
     setMounted(true)
     
     // Load social data from demo storage
-    const savedData = DemoStorage.getItem<any>('social-data')
+    const savedData = DemoStorage.getItem<Record<string, unknown>>('social-data')
     if (savedData) {
       setSocialData(savedData)
     }
@@ -32,7 +32,7 @@ export default function SocialPage() {
     }
   }, [socialData, mounted])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 

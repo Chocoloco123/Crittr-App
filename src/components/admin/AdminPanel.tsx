@@ -5,31 +5,17 @@ import { motion } from 'framer-motion'
 import { 
   Shield, 
   Users, 
-  UserX, 
   AlertTriangle, 
-  CheckCircle, 
   BarChart3, 
   Settings, 
-  Database, 
-  Mail, 
-  Bell, 
   Search, 
-  Filter, 
-  MoreHorizontal,
   Edit,
   Trash2,
   Eye,
   Ban,
   Check,
-  X,
-  Download,
-  RefreshCw,
   Activity,
   TrendingUp,
-  TrendingDown,
-  Calendar,
-  Clock,
-  FileText,
   Heart,
   MessageCircle
 } from 'lucide-react'
@@ -118,7 +104,7 @@ export default function AdminPanel({ isAdmin }: AdminPanelProps) {
         <div className="text-center">
           <Shield className="h-16 w-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-600">You don't have permission to access the admin panel.</p>
+          <p className="text-gray-600">You don&apos;t have permission to access the admin panel.</p>
         </div>
       </div>
     )
@@ -198,7 +184,7 @@ export default function AdminPanel({ isAdmin }: AdminPanelProps) {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setSelectedTab(tab.id as any)}
+                  onClick={() => setSelectedTab(tab.id)}
                   className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg transition-colors ${
                     selectedTab === tab.id
                       ? 'bg-indigo-600 text-white'
@@ -456,7 +442,7 @@ export default function AdminPanel({ isAdmin }: AdminPanelProps) {
                   { id: '1', type: 'Inappropriate Content', user: 'John Doe', post: 'Max\'s weight loss journey', status: 'pending', time: '2 hours ago' },
                   { id: '2', type: 'Spam', user: 'Jane Smith', post: 'Buy pet food here!', status: 'resolved', time: '1 day ago' },
                   { id: '3', type: 'Harassment', user: 'Mike Johnson', post: 'Training tips', status: 'investigating', time: '3 days ago' }
-                ].map((report, index) => (
+                ].map((report, _index) => (
                   <div key={report.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center space-x-4">
                       <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
@@ -465,7 +451,7 @@ export default function AdminPanel({ isAdmin }: AdminPanelProps) {
                       <div>
                         <h4 className="font-semibold text-gray-900">{report.type}</h4>
                         <p className="text-sm text-gray-600">Reported by {report.user}</p>
-                        <p className="text-sm text-gray-500">Post: "{report.post}"</p>
+                        <p className="text-sm text-gray-500">Post: &quot;{report.post}&quot;</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">

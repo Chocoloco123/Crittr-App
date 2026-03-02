@@ -10,10 +10,19 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/out/**",
+      "**/build/**",
+      "next-env.d.ts",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
       "react/no-unescaped-entities": "warn",
       "react-hooks/exhaustive-deps": "warn",
@@ -21,13 +30,6 @@ const eslintConfig = [
       "@next/next/no-html-link-for-pages": "warn",
       "react/jsx-no-undef": "error"
     },
-    ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-    ],
   },
 ];
 

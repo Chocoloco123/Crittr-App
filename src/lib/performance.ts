@@ -25,7 +25,7 @@ export const usePerformanceMonitoring = () => {
       // Monitor First Input Delay (FID)
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          const fidEntry = entry as any
+          const fidEntry = entry as { processingStart?: number; startTime?: number }
           if (fidEntry.processingStart && fidEntry.startTime) {
             // FID measured - could send to analytics service
             // Send to analytics service
@@ -36,12 +36,12 @@ export const usePerformanceMonitoring = () => {
       fidObserver.observe({ entryTypes: ['first-input'] })
       
       // Monitor Cumulative Layout Shift (CLS)
-      let clsValue = 0
+      let _clsValue = 0
       const clsObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          const clsEntry = entry as any
+          const clsEntry = entry as { hadRecentInput?: boolean; value?: number }
           if (!clsEntry.hadRecentInput && typeof clsEntry.value === 'number') {
-            clsValue += clsEntry.value
+            _clsValue += clsEntry.value
           }
         }
         // CLS measured - could send to analytics service
@@ -55,7 +55,7 @@ export const usePerformanceMonitoring = () => {
         fidObserver.disconnect()
         clsObserver.disconnect()
       }
-      } catch (error) {
+      } catch (_error) {
       }
     }
   }, [])

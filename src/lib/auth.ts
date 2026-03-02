@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account: _account, profile: _profile, email: _email, credentials: _credentials }) {
       // Sync user data with backend after successful sign in
       if (user.email) {
         try {
@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       // Add user ID to session
       if (session.user && user) {
-        (session.user as any).id = user.id
+        (session.user as Record<string, unknown>).id = user.id
         // Keep the full email as the name if no name is set
         if (!session.user.name && session.user.email) {
           session.user.name = session.user.email

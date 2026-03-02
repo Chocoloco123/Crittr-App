@@ -3,15 +3,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
-import Link from 'next/link'
-import { 
-  Bell, 
-  Settings, 
-  User,
-  LogOut,
-  Home,
-  Shield
-} from 'lucide-react'
 import RemindersList from '@/components/reminders/RemindersList'
 import ReminderForm from '@/components/reminders/ReminderForm'
 import AppNavigation from '@/components/layout/AppNavigation'
@@ -34,13 +25,13 @@ interface Reminder {
 }
 
 export default function RemindersPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingReminder, setEditingReminder] = useState<Reminder | null>(null)
   const [selectedPetId, setSelectedPetId] = useState<string>('')
   const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const { success, error } = useNotify()
+  const { success } = useNotify()
   
   // Demo mock data for unauthenticated users
   const mockReminders: Reminder[] = [
@@ -91,7 +82,7 @@ export default function RemindersPage() {
     setMounted(true)
   }, [])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 

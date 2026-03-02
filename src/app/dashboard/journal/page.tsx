@@ -3,28 +3,10 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
-import Link from 'next/link'
-import { 
-  Home, 
-  Calendar, 
-  Activity, 
-  Bell, 
-  BarChart3, 
-  Bot, 
-  Users, 
-  Shield,
-  ArrowLeft,
-  Plus,
-  Settings,
-  User,
-  LogOut,
-  FileText,
-  X
-} from 'lucide-react'
+import { FileText } from 'lucide-react'
 import JournalList from '@/components/journal/JournalList'
 import JournalEditor from '@/components/journal/JournalEditor'
 import AppNavigation from '@/components/layout/AppNavigation'
-import QuickNavigation from '@/components/layout/QuickNavigation'
 import { useDemoStorageArray } from '@/lib/hooks/useDemoStorage'
 import { useNotify } from '@/components/providers/NotificationProvider'
 import './page.scss'
@@ -50,9 +32,9 @@ interface Attachment {
 }
 
 export default function JournalPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status: _status } = useSession()
   const { journal: showJournalNotification } = useNotify()
-  const [mounted, setMounted] = useState(false)
+  const [_mounted, setMounted] = useState(false)
   const [showEditor, setShowEditor] = useState(false)
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null)
   const [selectedPetId, setSelectedPetId] = useState<string>('all')
@@ -153,13 +135,13 @@ export default function JournalPage() {
     
     // Clean up any existing blob URLs in localStorage
     const existingEntries = JSON.parse(localStorage.getItem('journal-entries') || '[]')
-    const cleanedEntries = existingEntries.map((entry: any) => ({
+    const cleanedEntries = existingEntries.map((entry: Record<string, unknown>) => ({
       ...entry,
-      attachments: entry.attachments?.map((att: any) => ({
+      attachments: (entry.attachments as Array<Record<string, unknown>>)?.map((att: Record<string, unknown>) => ({
         ...att,
-        url: att.url?.startsWith('blob:') 
-          ? (att.type === 'image' ? '/images/icons/dog.png' : 
-             att.type === 'video' ? '/images/icons/cat.png' : 
+        url: (att.url as string)?.startsWith('blob:') 
+          ? ((att.type as string) === 'image' ? '/images/icons/dog.png' :
+             (att.type as string) === 'video' ? '/images/icons/cat.png' : 
              '/images/icons/journal.png')
           : att.url
       })) || []
@@ -176,7 +158,7 @@ export default function JournalPage() {
   }, [])
 
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 
@@ -218,7 +200,7 @@ export default function JournalPage() {
       addEntry(newEntry)
       showJournalNotification(
         'Journal Entry Saved! ✨',
-        `"${entryData.title}" has been added to ${entryData.petName}'s journal`,
+        `"${entryData.title}" has been added to ${entryData.petName}\u2019s journal`,
         4000
       )
     }
@@ -235,7 +217,7 @@ export default function JournalPage() {
     showJournalNotification(
       'Journal Entry Deleted! 🗑️',
       entryToDelete 
-        ? `"${entryToDelete.title}" has been deleted from ${entryToDelete.petName}'s journal`
+        ? `"${entryToDelete.title}" has been deleted from ${entryToDelete.petName}\u2019s journal`
         : 'Journal entry has been removed',
       4000
     )
@@ -255,7 +237,7 @@ export default function JournalPage() {
         {/* Journal Header */}
         <div className="journal-header">
           <h1 className="journal-title">📝 Pet Journal</h1>
-          <p className="journal-subtitle">Capture precious moments and track your pet's health journey</p>
+          <p className="journal-subtitle">Capture precious moments and track your pet&apos;s health journey</p>
         </div>
 
         {/* Google Sheets-style Pet Tabs */}
@@ -304,7 +286,7 @@ export default function JournalPage() {
           {/* Debug button - remove this in production */}
           <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p className="text-sm text-yellow-800 mb-2">
-              🐛 Debug: If you're seeing blob URL errors, click the button below to clear localStorage and start fresh.
+              🐛 Debug: If you&apos;re seeing blob URL errors, click the button below to clear localStorage and start fresh.
             </p>
             <button
               onClick={handleClearStorage}

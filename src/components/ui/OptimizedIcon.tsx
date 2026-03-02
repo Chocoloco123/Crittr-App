@@ -51,7 +51,7 @@ export default function Icon({ name, size = 24, className = '' }: IconProps) {
           const { default: Icon } = await iconLoader()
           setIconComponent(() => Icon)
         }
-      } catch (error) {
+      } catch (_error) {
         console.warn(`Failed to load icon: ${name}`)
       } finally {
         setLoading(false)

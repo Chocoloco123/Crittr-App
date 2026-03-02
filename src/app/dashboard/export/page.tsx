@@ -9,17 +9,17 @@ import { DemoStorage } from '@/lib/demoStorage'
 import './page.scss'
 
 export default function ExportPage() {
-  const { data: session, status } = useSession()
+  const { data: _session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [selectedPetId, setSelectedPetId] = useState<string>('')
   const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const [exportHistory, setExportHistory] = useState<any[]>([])
+  const [exportHistory, setExportHistory] = useState<Array<Record<string, unknown>>>([])
 
   useEffect(() => {
     setMounted(true)
     
     // Load export history from demo storage
-    const savedHistory = DemoStorage.getItem<any[]>('export-history')
+    const savedHistory = DemoStorage.getItem<Array<Record<string, unknown>>>('export-history')
     if (savedHistory) {
       setExportHistory(savedHistory)
     }
@@ -32,7 +32,7 @@ export default function ExportPage() {
     }
   }, [exportHistory, mounted])
 
-  const handleSignOut = () => {
+  const _handleSignOut = () => {
     signOut({ callbackUrl: '/' })
   }
 
@@ -56,7 +56,7 @@ export default function ExportPage() {
         {/* Export Header */}
         <div className="export-header">
           <h1 className="export-title">📤 Export Data</h1>
-          <p className="export-subtitle">Export your pet's data and records</p>
+          <p className="export-subtitle">Export your pet&apos;s data and records</p>
         </div>
 
         {/* Pet Selection */}

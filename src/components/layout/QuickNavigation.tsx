@@ -8,9 +8,7 @@ import {
   Activity, 
   Bell, 
   BarChart3, 
-  Bot, 
   Users, 
-  Shield,
   ArrowRight
 } from 'lucide-react'
 
@@ -92,7 +90,7 @@ export default function QuickNavigation({ currentPage }: QuickNavigationProps) {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Navigation</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
-          {navigationItems.map((item, index) => {
+          {navigationItems.map((item, _index) => {
             const Icon = item.icon
             const isCurrentPage = currentPage?.toLowerCase() === item.label.toLowerCase()
             

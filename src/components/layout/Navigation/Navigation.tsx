@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
@@ -51,7 +52,7 @@ export default function Navigation() {
           <div className="header-inner">
             {/* Logo Section */}
             <div className="logo-section">
-              <a 
+              <Link 
                 href="/" 
                 className="logo-link"
                 aria-label="Crittr - Home"
@@ -68,7 +69,7 @@ export default function Navigation() {
                   <span className="logo-text">Crittr</span>
                   <span className="logo-subtitle">Pet Wellness Simplified</span>
                 </div>
-              </a>
+              </Link>
             </div>
 
             {/* Desktop Auth Button and Navigation Dropdown */}

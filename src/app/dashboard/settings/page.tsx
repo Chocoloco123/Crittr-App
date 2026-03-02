@@ -5,10 +5,8 @@ import { useSession, signOut } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { 
   User, 
-  Settings, 
   Trash2, 
   AlertTriangle, 
-  Shield,
   LogOut,
   ArrowLeft
 } from 'lucide-react'
@@ -238,7 +236,7 @@ export default function SettingsPage() {
 
               <div className="settings-modal-field">
                 <label className="settings-modal-label">
-                  Type "DELETE" to confirm:
+                  Type &quot;DELETE&quot; to confirm:
                 </label>
                 <input
                   type="text"

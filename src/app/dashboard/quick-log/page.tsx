@@ -20,22 +20,16 @@ interface QuickLog {
 }
 
 export default function QuickLogPage() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const [mounted, setMounted] = useState(false)
-  const [selectedPetId, setSelectedPetId] = useState<string>('')
-  const [selectedPetName, setSelectedPetName] = useState<string>('')
-  const { success, error } = useNotify()
+  const { success } = useNotify()
   
   // Use optimized demo storage hook
-  const { data: logs, addItem: addLog, updateItem: updateLog, removeItem: removeLog, isHydrated } = useDemoStorageArray<QuickLog>('quick-logs')
+  const { data: logs, addItem: addLog, updateItem: updateLog, removeItem: removeLog } = useDemoStorageArray<QuickLog>('quick-logs')
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' })
-  }
 
   const handleLogActivity = (logData: Omit<QuickLog, 'id'>) => {
     const newLog: QuickLog = {
@@ -111,7 +105,7 @@ export default function QuickLogPage() {
             className="quick-log-summary"
           >
             <div className="quick-log-summary-header">
-              <h3 className="quick-log-summary-title">Today's Activity Summary</h3>
+              <h3 className="quick-log-summary-title">Today&apos;s Activity Summary</h3>
             </div>
             <div className="quick-log-summary-content">
               <div className="quick-log-summary-grid">
@@ -130,7 +124,7 @@ export default function QuickLogPage() {
                     </div>
                     <p className="quick-log-summary-item-pet">{log.petName}</p>
                     {log.notes && (
-                      <p className="quick-log-summary-item-notes">"{log.notes}"</p>
+                      <p className="quick-log-summary-item-notes">&quot;{log.notes}&quot;</p>
                     )}
                   </div>
                 ))}

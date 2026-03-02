@@ -51,7 +51,7 @@ export default function PrivacyPolicy() {
               
               <div className="privacy-warning-box">
                 <p className="privacy-warning-text">
-                  <strong>IMPORTANT:</strong> We do NOT use your pet's health information to provide medical advice, diagnosis, or treatment. We are NOT veterinarians and do NOT offer veterinary services.
+                  <strong>IMPORTANT:</strong> We do NOT use your pet&apos;s health information to provide medical advice, diagnosis, or treatment. We are NOT veterinarians and do NOT offer veterinary services.
                 </p>
               </div>
             </section>
@@ -106,12 +106,12 @@ export default function PrivacyPolicy() {
             <section className="privacy-section">
               <h2 className="privacy-section-title">8. Third-Party Services</h2>
               <p className="privacy-text">
-                Our service integrates with Google for authentication. Please review Google's Privacy Policy to understand how they handle your information.
+                Our service integrates with Google for authentication. Please review Google&apos;s Privacy Policy to understand how they handle your information.
               </p>
             </section>
 
             <section className="privacy-section">
-              <h2 className="privacy-section-title">9. Children's Privacy</h2>
+              <h2 className="privacy-section-title">9. Children&apos;s Privacy</h2>
               <p className="privacy-text">
                 Our service is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.
               </p>
@@ -120,7 +120,7 @@ export default function PrivacyPolicy() {
             <section className="privacy-section">
               <h2 className="privacy-section-title">10. Changes to This Policy</h2>
               <p className="privacy-text">
-                We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+                We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
               </p>
             </section>
 

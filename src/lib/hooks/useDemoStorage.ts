@@ -49,12 +49,12 @@ export function useDemoStorageArray<T>(key: string, defaultValue: T[] = []) {
 
   const updateItem = useCallback((id: string, updates: Partial<T>) => {
     setData(prev => prev.map(item => 
-      (item as any).id === id ? { ...item, ...updates } : item
+      (item as unknown as { id: string }).id === id ? { ...item, ...updates } : item
     ))
   }, [setData])
 
   const removeItem = useCallback((id: string) => {
-    setData(prev => prev.filter(item => (item as any).id !== id))
+    setData(prev => prev.filter(item => (item as unknown as { id: string }).id !== id))
   }, [setData])
 
   const clearAll = useCallback(() => {

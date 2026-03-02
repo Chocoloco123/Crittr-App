@@ -2,27 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { 
   Plus, 
   Camera, 
   Grid3X3, 
   List, 
-  Search, 
-  Filter,
-  Heart,
-  Share2,
-  Download,
-  Edit,
-  Trash2,
+  Search,
   Eye,
-  X,
-  Calendar,
-  User,
-  Tag
+  Trash2
 } from 'lucide-react'
 import AppNavigation from '@/components/layout/AppNavigation'
-import { useDemoStorageArray } from '@/lib/hooks/useDemoStorage'
 import { useNotify } from '@/components/providers/NotificationProvider'
 import './page.scss'
 
@@ -56,14 +47,14 @@ interface PhotoAlbum {
 
 export default function PhotoAlbumsPage() {
   const router = useRouter()
-  const { success, error } = useNotify()
+  const { success } = useNotify()
   const [mounted, setMounted] = useState(false)
   const [albums, setAlbums] = useState<PhotoAlbum[]>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedPet, setSelectedPet] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'photos'>('date')
-  const [showCreateAlbum, setShowCreateAlbum] = useState(false)
+  const [_showCreateAlbum, setShowCreateAlbum] = useState(false)
 
   // Demo pets data
   const demoPets = [
@@ -152,6 +143,7 @@ export default function PhotoAlbumsPage() {
     setMounted(true)
     // In a real app, this would fetch from the backend
     setAlbums(mockAlbums)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- mockAlbums is static demo data
   }, [])
 
   const handleCreateAlbum = () => {
@@ -176,7 +168,7 @@ export default function PhotoAlbumsPage() {
     })
   }
 
-  const formatFileSize = (bytes: number): string => {
+  const _formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
@@ -333,9 +325,11 @@ export default function PhotoAlbumsPage() {
                   {/* Cover Photo */}
                   <div className={`${viewMode === 'list' ? 'w-32 h-32 flex-shrink-0' : 'aspect-square'} relative overflow-hidden bg-gray-100`}>
                     {album.cover_photo_id ? (
-                      <img
+                      <Image
                         src={album.photos.find(p => p.id === album.cover_photo_id)?.file_path || '/images/icons/dog.png'}
                         alt={album.name}
+                        width={128}
+                        height={128}
                         className="w-full h-full object-cover"
                       />
                     ) : (
