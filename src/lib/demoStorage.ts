@@ -13,8 +13,8 @@ interface StoredData<T> {
   expiresAt: number
 }
 
-// Cache for SSR to prevent hydration mismatches
-const ssrCache = new Map<string, unknown>()
+// Cache for SSR to prevent hydration mismatches (stores StoredData shape per key)
+const ssrCache = new Map<string, StoredData<unknown>>()
 
 export class DemoStorage {
   /**
@@ -70,7 +70,7 @@ export class DemoStorage {
     if (cached) {
       const now = Date.now()
       if (now <= cached.expiresAt) {
-        return cached.data
+        return cached.data as T
       } else {
         ssrCache.delete(key)
       }

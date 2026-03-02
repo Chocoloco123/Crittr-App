@@ -9,27 +9,8 @@ import JournalEditor from '@/components/journal/JournalEditor'
 import AppNavigation from '@/components/layout/AppNavigation'
 import { useDemoStorageArray } from '@/lib/hooks/useDemoStorage'
 import { useNotify } from '@/components/providers/NotificationProvider'
+import type { JournalEntry } from '@/types/journal'
 import './page.scss'
-
-interface JournalEntry {
-  id: string
-  title: string
-  content: string
-  petId: string
-  petName: string
-  entryType: 'general' | 'feeding' | 'medication' | 'exercise' | 'vet_visit' | 'grooming' | 'weight' | 'symptoms'
-  attachments: Attachment[]
-  createdAt: string
-  updatedAt: string
-}
-
-interface Attachment {
-  id: string
-  type: 'image' | 'video' | 'document'
-  url: string
-  name: string
-  size: number
-}
 
 export default function JournalPage() {
   const { data: _session, status: _status } = useSession()

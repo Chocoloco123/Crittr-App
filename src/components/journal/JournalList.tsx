@@ -27,26 +27,7 @@ import {
 } from 'lucide-react'
 import JournalEntryDetails from './JournalEntryDetails'
 import { useNotify } from '@/components/providers/NotificationProvider'
-
-interface JournalEntry {
-  id: string
-  title: string
-  content: string
-  petId: string
-  petName: string
-  entryType: 'general' | 'feeding' | 'medication' | 'exercise' | 'vet_visit' | 'grooming' | 'weight' | 'symptoms'
-  attachments: Attachment[]
-  createdAt: string
-  updatedAt: string
-}
-
-interface Attachment {
-  id: string
-  type: 'image' | 'video' | 'document'
-  url: string
-  name: string
-  size: number
-}
+import type { JournalEntry, Attachment } from '@/types/journal'
 
 interface JournalListProps {
   entries: JournalEntry[]
@@ -425,7 +406,8 @@ export default function JournalList({ entries, petId, onNewEntry, onEditEntry, o
                                       onError={(e) => {
                                         // Fallback to icon if image fails to load
                                         e.currentTarget.style.display = 'none'
-                                        e.currentTarget.nextElementSibling.style.display = 'flex'
+                                        const next = e.currentTarget.nextElementSibling
+                                        if (next instanceof HTMLElement) next.style.display = 'flex'
                                       }}
                                     />
                                     <div className="w-full h-full bg-green-50 flex items-center justify-center" style={{display: 'none'}}>
@@ -440,7 +422,7 @@ export default function JournalList({ entries, petId, onNewEntry, onEditEntry, o
                               }
                             })()}
                             <span className="text-sm text-gray-700">{attachment.name || attachment.original_filename}</span>
-                            <span className="text-xs text-gray-500">({formatFileSize(attachment.size || attachment.file_size)})</span>
+                            <span className="text-xs text-gray-500">({formatFileSize(attachment.size ?? attachment.file_size ?? 0)})</span>
                             <button className="text-indigo-600 hover:text-indigo-800">
                               <Download className="h-3 w-3" />
                             </button>

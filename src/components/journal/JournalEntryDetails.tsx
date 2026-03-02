@@ -22,34 +22,7 @@ import {
   Trash2
 } from 'lucide-react'
 import { useNotify } from '@/components/providers/NotificationProvider'
-
-interface JournalEntry {
-  id: string
-  title: string
-  content: string
-  petId: string
-  petName: string
-  entryType: 'general' | 'feeding' | 'medication' | 'exercise' | 'vet_visit' | 'grooming' | 'weight' | 'symptoms'
-  attachments: Attachment[]
-  createdAt: string
-  updatedAt: string
-}
-
-interface Attachment {
-  id: number
-  filename: string
-  original_filename: string
-  file_path: string
-  file_type: 'image' | 'video' | 'document'
-  mime_type: string
-  file_size: number
-  created_at: string
-  // Computed properties for frontend
-  url: string
-  name: string
-  size: number
-  type: 'image' | 'video' | 'document'
-}
+import type { JournalEntry, Attachment } from '@/types/journal'
 
 interface JournalEntryDetailsProps {
   entry: JournalEntry | null
@@ -279,7 +252,8 @@ export default function JournalEntryDetails({ entry, isOpen, onClose, onEdit, on
                                   onError={(e) => {
                                     // Fallback to placeholder if image fails to load
                                     e.currentTarget.style.display = 'none'
-                                    e.currentTarget.nextElementSibling.style.display = 'flex'
+                                    const next = e.currentTarget.nextElementSibling
+                                    if (next instanceof HTMLElement) next.style.display = 'flex'
                                   }}
                                 />
                                 <div className="w-full h-48 bg-blue-50 flex items-center justify-center" style={{display: 'none'}}>
@@ -324,7 +298,7 @@ export default function JournalEntryDetails({ entry, isOpen, onClose, onEdit, on
                               <div className="flex items-center justify-between">
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm font-medium text-gray-900 truncate">{attachment.original_filename || attachment.name}</p>
-                                  <p className="text-xs text-gray-500">{formatFileSize(attachment.file_size || attachment.size)}</p>
+                                  <p className="text-xs text-gray-500">{formatFileSize(attachment.file_size ?? attachment.size ?? 0)}</p>
                                 </div>
                                 <button
                                   onClick={() => handleDownload(attachment)}

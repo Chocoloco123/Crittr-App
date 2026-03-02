@@ -25,29 +25,7 @@ import {
   PawPrint
 } from 'lucide-react'
 import { useNotify } from '@/components/providers/NotificationProvider'
-
-interface JournalEntry {
-  id: string
-  title: string
-  content: string
-  petId: string
-  petName: string
-  entryType: 'general' | 'feeding' | 'medication' | 'exercise' | 'vet_visit' | 'grooming' | 'weight' | 'symptoms'
-  attachments: Attachment[]
-  createdAt: string
-  updatedAt: string
-}
-
-interface Attachment {
-  id: string
-  type: 'image' | 'video' | 'document'
-  url: string
-  name: string
-  size: number
-  /** Backend format: optional fields for API response shape */
-  original_filename?: string
-  file_size?: number
-}
+import type { JournalEntry, Attachment } from '@/types/journal'
 
 interface JournalEditorProps {
   petId?: string
@@ -184,7 +162,7 @@ export default function JournalEditor({
     }
   }, [])
 
-  const removeAttachment = (attachmentId: string) => {
+  const removeAttachment = (attachmentId: string | number) => {
     setAttachments(prev => prev.filter(att => att.id !== attachmentId))
   }
 
@@ -507,12 +485,13 @@ export default function JournalEditor({
                             <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
                               <img 
                                 src={attachmentUrl} 
-                                alt={attachment.name || attachment.original_filename}
+                                alt={attachment.name ?? attachment.original_filename ?? ''}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
                                   // Fallback to icon if image fails to load
                                   e.currentTarget.style.display = 'none'
-                                  e.currentTarget.nextElementSibling.style.display = 'flex'
+                                  const next = e.currentTarget.nextElementSibling
+                                  if (next instanceof HTMLElement) next.style.display = 'flex'
                                 }}
                               />
                               <div className="w-full h-full bg-teal-50 flex items-center justify-center" style={{display: 'none'}}>
@@ -535,8 +514,8 @@ export default function JournalEditor({
                         }
                       })()}
                       <div>
-                        <p className="font-medium text-gray-900 font-family: 'Inter', sans-serif">{attachment.name || attachment.original_filename}</p>
-                        <p className="text-sm text-gray-500 font-family: 'Inter', sans-serif">{formatFileSize(attachment.size || attachment.file_size)}</p>
+                        <p className="font-medium text-gray-900 font-family: 'Inter', sans-serif">{attachment.name ?? attachment.original_filename ?? 'Attachment'}</p>
+                        <p className="text-sm text-gray-500 font-family: 'Inter', sans-serif">{formatFileSize(attachment.size ?? attachment.file_size ?? 0)}</p>
                       </div>
                     </div>
                     <button
