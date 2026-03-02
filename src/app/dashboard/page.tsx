@@ -22,6 +22,12 @@ import { DemoStorage } from '@/lib/demoStorage'
 import AuthModal from '@/components/auth/AuthModal'
 import './page.scss'
 
+interface DashboardJournalEntry {
+  id: string
+  title: string
+  createdAt: string
+}
+
 export default function Dashboard() {
   const { data: session, status } = useSession()
   const [mounted, setMounted] = useState(false)
@@ -101,12 +107,12 @@ export default function Dashboard() {
   ]
 
   // Fetch journal entries for recent activities
-  const [journalEntries, setJournalEntries] = useState<Array<Record<string, unknown>>>([])
+  const [journalEntries, setJournalEntries] = useState<DashboardJournalEntry[]>([])
   
   useEffect(() => {
     if (mounted) {
       // Fetch journal entries from demo storage
-      const entries = DemoStorage.getItem<Array<Record<string, unknown>>>('journal-entries') || []
+      const entries = DemoStorage.getItem<DashboardJournalEntry[]>('journal-entries') || []
       setJournalEntries(entries)
     }
   }, [mounted])
