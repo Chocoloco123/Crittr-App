@@ -12,6 +12,7 @@ import {
   Shield,
   LogIn
 } from 'lucide-react'
+import Image from 'next/image'
 import NavigationDropdown from './NavigationDropdown'
 import AuthModal from '@/components/auth/AuthModal'
 import './Navigation/Navigation.scss'
@@ -46,7 +47,14 @@ export default function AppNavigation({ currentPage }: AppNavigationProps) {
           <div className="header-inner">
             <div className="logo-section">
               <div className="logo-link">
-                <span className="text-4xl">🐾</span>
+                <Image 
+                  src="/images/icons/pawsIcon.png" 
+                  alt="Crittr Logo" 
+                  width={40} 
+                  height={27}
+                  className="h-[27px] w-10 object-contain"
+                  priority
+                />
                 <div className="flex flex-col">
                   <span className="logo-text">Crittr</span>
                   <span className="logo-subtitle">Pet Wellness Simplified</span>
@@ -73,7 +81,14 @@ export default function AppNavigation({ currentPage }: AppNavigationProps) {
               className="logo-link"
               aria-label="Crittr - Home"
             >
-              <span className="text-4xl">🐾</span>
+              <Image 
+                src="/images/icons/pawsIcon.png" 
+                alt="Crittr Logo" 
+                width={56} 
+                height={37}
+                className="h-[37px] w-14 object-contain"
+                priority
+              />
               <div className="flex flex-col">
                 <span className="logo-text">Crittr</span>
                 <span className="logo-subtitle">Pet Wellness Simplified</span>

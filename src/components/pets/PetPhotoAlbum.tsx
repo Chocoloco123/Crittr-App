@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { 
   X, 
   Download, 
@@ -36,6 +37,7 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
   const [loading, setLoading] = useState(false)
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
+  const [isSharing, setIsSharing] = useState(false)
 
   // Load photos from journal entries and direct uploads
   useEffect(() => {
@@ -137,17 +139,54 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
     document.body.removeChild(link)
   }
 
-  const handleShare = (photo: Photo) => {
-    if (navigator.share) {
-      navigator.share({
-        title: `${petName}'s Photo`,
-        text: `Check out this photo of ${petName}!`,
-        url: photo.url
-      })
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(photo.url)
-      // You could show a toast notification here
+  const handleShare = async (photo: Photo) => {
+    // Prevent multiple concurrent share operations
+    if (isSharing) {
+      return // Silently ignore if already sharing
+    }
+
+    setIsSharing(true)
+    
+    try {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `${petName}'s Photo`,
+            text: `Check out this photo of ${petName}!`,
+            url: photo.url
+          })
+          // Share was successful - no need to do anything else
+        } catch (error) {
+          // Handle the case where user cancels the share dialog
+          if (error instanceof Error && error.name === 'AbortError') {
+            // User cancelled the share - this is expected behavior, no need to show error
+            console.log('Share cancelled by user')
+            return
+          }
+          // Handle other errors
+          console.error('Error sharing photo:', error)
+          // Fallback to clipboard if share fails for other reasons
+          try {
+            await navigator.clipboard.writeText(photo.url)
+            // You could show a toast notification here for successful clipboard copy
+          } catch (clipboardError) {
+            console.error('Failed to copy to clipboard:', clipboardError)
+          }
+        }
+      } else {
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(photo.url)
+          // You could show a toast notification here
+        } catch (error) {
+          console.error('Failed to copy to clipboard:', error)
+        }
+      }
+    } catch (error) {
+      console.error('Unexpected error in handleShare:', error)
+    } finally {
+      // Always reset the sharing state
+      setIsSharing(false)
     }
   }
 
@@ -208,21 +247,29 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
                       onClick={() => setSelectedPhoto(photo)}
                     >
                       <div className="aspect-square rounded-lg overflow-hidden bg-gray-50 relative border border-gray-200">
-                        <img
+                        <Image
                           src={photo.url}
                           alt={photo.filename}
+                          width={300}
+                          height={300}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                          style={{ 
-                            backgroundColor: 'transparent'
-                          }}
-                          onLoad={() => {
+                          style={{ backgroundColor: 'transparent' }}
+                          priority={true}
+                          quality={75}
+                          onLoadingComplete={() => {
                             console.log('Image loaded, adding to loaded set:', photo.id)
                             setLoadedImages(prev => new Set(prev).add(photo.id))
                           }}
                           onError={(e) => {
                             console.error('Image failed to load:', photo.url)
-                            e.currentTarget.style.display = 'none'
-                            e.currentTarget.nextElementSibling.style.display = 'flex'
+                            const imgElement = e.target as HTMLImageElement
+                            if (imgElement.parentElement) {
+                              imgElement.style.display = 'none'
+                              const nextElement = imgElement.nextElementSibling
+                              if (nextElement) {
+                                (nextElement as HTMLElement).style.display = 'flex'
+                              }
+                            }
                           }}
                         />
                         {/* Loading indicator */}
@@ -263,6 +310,7 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
                               handleShare(photo)
                             }}
                             className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
+                            title="Share"
                           >
                             <Share2 className="h-4 w-4 text-gray-700" />
                           </button>
@@ -302,10 +350,14 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
               >
                 {/* Image container */}
                 <div className="relative bg-white p-4">
-                  <img
+                  <Image
                     src={selectedPhoto.url}
                     alt={selectedPhoto.filename}
+                    width={800}
+                    height={800}
                     className="max-w-full max-h-[60vh] object-contain mx-auto"
+                    priority={true}
+                    quality={85}
                   />
                 </div>
                 
@@ -331,6 +383,7 @@ export default function PetPhotoAlbum({ petId, petName, isOpen, onClose, isDemo 
                       <button
                         onClick={() => handleShare(selectedPhoto)}
                         className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors text-gray-700"
+                        title="Share"
                       >
                         <Share2 className="h-5 w-5" />
                       </button>

@@ -9,14 +9,14 @@ export default function AboutSection() {
     { icon: '/images/icons/dog.png', number: '50K+', label: 'Happy Pet Parents' },
     { icon: '/images/icons/guineapig.png', number: '100K+', label: 'Pets Tracked' },
     { icon: '/images/icons/heart-red.png', number: '4.9/5', label: 'App Store Rating' },
-    { icon: '/images/icons/paw.png', number: '99.9%', label: 'Uptime Guarantee' }
+    { icon: '/images/icons/pawIcon.png', number: '99.9%', label: 'Uptime Guarantee' }
   ]
 
   const teamValues = [
     {
       title: 'Pet-First Design',
       description: 'Every feature is designed with your pet\'s wellbeing in mind. We understand the unique bond between pets and their families.',
-      icon: '/images/icons/paw.png'
+      icon: '/images/icons/pawIcon.png'
     },
     {
       title: 'AI-Powered Insights',

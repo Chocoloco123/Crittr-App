@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
+import Image from 'next/image'
 import AuthModal from '@/components/auth/AuthModal'
 import './Navigation.scss'
 
@@ -55,7 +56,14 @@ export default function Navigation() {
                 className="logo-link"
                 aria-label="Crittr - Home"
               >
-                <span className="text-4xl">🐾</span>
+                <Image 
+                  src="/images/icons/pawsIcon.png" 
+                  alt="Crittr Logo" 
+                  width={56} 
+                  height={37}
+                  className="h-[37px] w-14 object-contain"
+                  priority
+                />
                 <div className="flex flex-col">
                   <span className="logo-text">Crittr</span>
                   <span className="logo-subtitle">Pet Wellness Simplified</span>

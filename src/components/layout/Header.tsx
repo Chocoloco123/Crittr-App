@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Menu, X, User, LogIn, ArrowRight, Heart, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSession, signOut } from 'next-auth/react'
+import Image from 'next/image'
 import AuthModal from '@/components/auth/AuthModal'
 
 export default function Header() {
@@ -31,7 +32,14 @@ export default function Header() {
                 className="flex items-center space-x-3 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors group h-full"
                 aria-label="Crittr - Home"
               >
-                <span className="text-3xl">🐾</span>
+                <Image 
+                  src="/images/icons/pawsIcon.png" 
+                  alt="Crittr Logo" 
+                  width={44} 
+                  height={29}
+                  className="h-[29px] w-11 object-contain"
+                  priority
+                />
                 <div className="flex flex-col justify-center">
                   <span className="text-primary-600 font-bold text-lg leading-tight">Crittr</span>
                   <span className="text-xs text-gray-500 font-normal leading-tight">Pet Care & Journaling</span>
@@ -74,7 +82,14 @@ export default function Header() {
                 className="flex items-center space-x-3 text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors group h-full"
                 aria-label="Crittr - Home"
               >
-                <span className="text-3xl">🐾</span>
+                <Image 
+                  src="/images/icons/pawsIcon.png" 
+                  alt="Crittr Logo" 
+                  width={44} 
+                  height={29}
+                  className="h-[29px] w-11 object-contain"
+                  priority
+                />
                 <div className="flex flex-col justify-center">
                   <span className="text-primary-600 font-bold text-lg leading-tight">Crittr</span>
                   <span className="text-xs text-gray-500 font-normal leading-tight">Pet Care & Journaling</span>

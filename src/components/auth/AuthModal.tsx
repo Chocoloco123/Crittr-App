@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Loader2 } from 'lucide-react'
 import { signIn } from 'next-auth/react'
+import Image from 'next/image'
 import './AuthModal.scss'
 
 interface AuthModalProps {
@@ -62,7 +63,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           {/* Header */}
           <div className="auth-modal-header">
             <div className="auth-modal-logo">
-              <span className="auth-modal-logo-icon">🐾</span>
+              <Image 
+                src="/images/icons/pawsIcon.png" 
+                alt="Crittr Logo" 
+                width={48} 
+                height={32}
+                className="w-12 h-8 object-contain"
+                priority
+              />
               <span className="auth-modal-logo-text">Crittr</span>
             </div>
             <h2 className="auth-modal-title">

@@ -2,25 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { 
   ArrowLeft,
-  Plus, 
-  Camera, 
   Download,
   Share2,
-  Edit,
   Trash2,
-  X,
-  Calendar,
-  User,
-  Tag,
+  Edit,
   Heart,
-  Eye
+  Calendar,
+  Tag
 } from 'lucide-react'
+import Link from 'next/link'
 import AppNavigation from '@/components/layout/AppNavigation'
-import { useNotify } from '@/components/providers/NotificationProvider'
-import './page.scss'
 
 interface Photo {
   id: string
@@ -29,14 +24,12 @@ interface Photo {
   file_path: string
   mime_type: string
   file_size: number
-  width?: number
-  height?: number
   caption?: string
   tags?: string[]
   created_at: string
 }
 
-interface PhotoAlbum {
+interface Album {
   id: string
   name: string
   description?: string
@@ -53,23 +46,15 @@ interface PhotoAlbum {
 export default function AlbumPage() {
   const params = useParams()
   const router = useRouter()
-  const { success, error } = useNotify()
-  const [mounted, setMounted] = useState(false)
-  const [album, setAlbum] = useState<PhotoAlbum | null>(null)
+  const [album, setAlbum] = useState<Album | null>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
-  const [showPhotoViewer, setShowPhotoViewer] = useState(false)
+  const [isSharing, setIsSharing] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  // Demo pets data
-  const demoPets = [
-    { id: '1', name: 'Buddy', type: 'Dog', breed: 'Golden Retriever', avatar: '🐕' },
-    { id: '2', name: 'Luna', type: 'Cat', breed: 'Maine Coon', avatar: '🐱' },
-    { id: '3', name: 'Max', type: 'Dog', breed: 'Labrador', avatar: '🐕' }
-  ]
-
-  // Mock album data
-  const mockAlbums: PhotoAlbum[] = [
-    {
+  useEffect(() => {
+    // In a real app, this would fetch from an API
+    // For now, we'll use mock data
+    const mockAlbum: Album = {
       id: '1',
       name: 'Buddy\'s Adventures',
       description: 'All the fun times with Buddy',
@@ -104,68 +89,11 @@ export default function AlbumPage() {
         }
       ],
       photo_count: 2
-    },
-    {
-      id: '2',
-      name: 'Luna\'s Cute Moments',
-      description: 'Luna being adorable',
-      cover_photo_id: '3',
-      pet_id: '2',
-      user_id: 'demo',
-      is_public: false,
-      created_at: '2024-01-14T10:15:00Z',
-      updated_at: '2024-01-14T10:15:00Z',
-      photos: [
-        {
-          id: '3',
-          filename: 'cat.png',
-          original_filename: 'luna_window.jpg',
-          file_path: '/images/icons/cat.png',
-          mime_type: 'image/png',
-          file_size: 2048000,
-          caption: 'Luna watching birds',
-          tags: ['window', 'birds', 'cute'],
-          created_at: '2024-01-14T10:15:00Z'
-        },
-        {
-          id: '4',
-          filename: 'paw.png',
-          original_filename: 'luna_paw.jpg',
-          file_path: '/images/icons/paw.png',
-          mime_type: 'image/png',
-          file_size: 2048000,
-          caption: 'Luna\'s cute paw',
-          tags: ['paw', 'cute', 'close-up'],
-          created_at: '2024-01-13T16:45:00Z'
-        }
-      ],
-      photo_count: 2
     }
-  ]
 
-  useEffect(() => {
-    setMounted(true)
-    
-    // Find the album by ID
-    const albumId = params.albumId as string
-    const foundAlbum = mockAlbums.find(a => a.id === albumId)
-    
-    if (foundAlbum) {
-      console.log('Found album:', foundAlbum)
-      console.log('Album photos:', foundAlbum.photos)
-      setAlbum(foundAlbum)
-    } else {
-      error('Album Not Found', 'The album you\'re looking for doesn\'t exist.', 4000)
-      router.push('/dashboard/albums')
-    }
-    
+    setAlbum(mockAlbum)
     setLoading(false)
-  }, [params.albumId, router])
-
-  const getPetName = (petId: string) => {
-    const pet = demoPets.find(p => p.id === petId)
-    return pet ? pet.name : 'Unknown Pet'
-  }
+  }, [params.albumId])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -175,60 +103,10 @@ export default function AlbumPage() {
     })
   }
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
-
-  const handleViewPhoto = (photo: Photo) => {
-    setSelectedPhoto(photo)
-    setShowPhotoViewer(true)
-  }
-
-  const handleClosePhotoViewer = () => {
-    setShowPhotoViewer(false)
-    setSelectedPhoto(null)
-  }
-
-  const handleDownload = (photo: Photo) => {
-    const link = document.createElement('a')
-    link.href = photo.file_path
-    link.download = photo.original_filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-
-  const handleShare = (photo: Photo) => {
-    if (navigator.share) {
-      navigator.share({
-        title: photo.caption || photo.original_filename,
-        url: photo.file_path,
-      }).catch(console.error)
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(photo.file_path)
-      success('Link Copied', 'Photo link copied to clipboard', 2000)
-    }
-  }
-
-  const handleDeleteAlbum = () => {
-    if (confirm('Are you sure you want to delete this album? This action cannot be undone.')) {
-      success('Album Deleted', `"${album?.name}" has been deleted`, 4000)
-      router.push('/dashboard/albums')
-    }
-  }
-
-  if (!mounted || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading album...</p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
       </div>
     )
   }
@@ -237,14 +115,14 @@ export default function AlbumPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Album Not Found</h1>
-          <p className="text-gray-600 mb-6">The album you're looking for doesn't exist.</p>
-          <button
-            onClick={() => router.push('/dashboard/albums')}
-            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Album not found</h2>
+          <p className="text-gray-600 mb-4">The album you're looking for doesn't exist.</p>
+          <Link 
+            href="/dashboard/albums"
+            className="text-teal-600 hover:text-teal-700 font-medium"
           >
             Back to Albums
-          </button>
+          </Link>
         </div>
       </div>
     )
@@ -252,221 +130,227 @@ export default function AlbumPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Photo Modal */}
+      {selectedPhoto && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div 
+            className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors"
+              onClick={() => setSelectedPhoto(null)}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+
+            {/* Image Container */}
+            <div className="relative h-[60vh] flex items-center justify-center bg-gray-50 p-4">
+              <Image
+                src={selectedPhoto.file_path}
+                alt={selectedPhoto.caption || selectedPhoto.filename}
+                width={600}
+                height={400}
+                className="max-w-full max-h-full object-contain"
+                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 70vw, 50vw"
+                priority
+                quality={75}
+              />
+            </div>
+            
+            {/* Photo Info */}
+            <div className="p-4 bg-white border-t border-gray-200">
+              {selectedPhoto.caption && (
+                <p className="text-lg font-medium text-gray-900 mb-2">{selectedPhoto.caption}</p>
+              )}
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">{formatDate(selectedPhoto.created_at)}</p>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => {
+                      const link = document.createElement('a')
+                      link.href = selectedPhoto.file_path
+                      link.download = selectedPhoto.filename
+                      document.body.appendChild(link)
+                      link.click()
+                      document.body.removeChild(link)
+                    }}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    title="Download"
+                  >
+                    <Download className="h-5 w-5 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={async () => {
+                      // Prevent multiple concurrent share operations
+                      if (isSharing) {
+                        return // Silently ignore if already sharing
+                      }
+
+                      setIsSharing(true)
+                      
+                      try {
+                        if (navigator.share) {
+                          try {
+                            await navigator.share({
+                              title: selectedPhoto.caption || 'Shared Photo',
+                              url: selectedPhoto.file_path
+                            })
+                            // Share was successful - no need to do anything else
+                          } catch (error) {
+                            // Handle the case where user cancels the share dialog
+                            if (error instanceof Error && error.name === 'AbortError') {
+                              // User cancelled the share - this is expected behavior, no need to show error
+                              console.log('Share cancelled by user')
+                              return
+                            }
+                            // Handle other errors
+                            console.error('Error sharing photo:', error)
+                            // Fallback to clipboard if share fails for other reasons
+                            try {
+                              await navigator.clipboard.writeText(selectedPhoto.file_path)
+                            } catch (clipboardError) {
+                              console.error('Failed to copy to clipboard:', clipboardError)
+                            }
+                          }
+                        } else {
+                          // Fallback: copy to clipboard
+                          try {
+                            await navigator.clipboard.writeText(selectedPhoto.file_path)
+                          } catch (error) {
+                            console.error('Failed to copy to clipboard:', error)
+                          }
+                        }
+                      } catch (error) {
+                        console.error('Unexpected error in share handler:', error)
+                      } finally {
+                        // Always reset the sharing state
+                        setIsSharing(false)
+                      }
+                    }}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    title="Share"
+                  >
+                    <Share2 className="h-5 w-5 text-gray-700" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <AppNavigation />
       
       <main className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => router.push('/dashboard/albums')}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                  <span>Back to Albums</span>
-                </button>
-              </div>
-              <div className="flex items-center space-x-3">
-                <button className="flex items-center space-x-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
-                  <Plus className="h-4 w-4" />
-                  <span>Add Photos</span>
-                </button>
-                <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                  <Edit className="h-4 w-4" />
-                  <span>Edit Album</span>
-                </button>
-                <button
-                  onClick={handleDeleteAlbum}
-                  className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span>Delete Album</span>
-                </button>
-              </div>
+            <div className="flex items-center space-x-4 mb-4">
+              <Link
+                href="/dashboard/albums"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-1" />
+                Back to Albums
+              </Link>
             </div>
-          </div>
-
-          {/* Debug Test Image */}
-          <div className="bg-yellow-100 border-2 border-yellow-400 p-4 mb-4 rounded-lg">
-            <h3 className="text-lg font-bold mb-2">Debug: Test Image</h3>
-            <img 
-              src="/images/icons/dog.png" 
-              alt="Test Dog" 
-              className="w-32 h-32 object-cover border-2 border-red-500"
-              onLoad={() => console.log('✅ Test image loaded!')}
-              onError={() => console.log('❌ Test image failed!')}
-            />
-            <p className="text-sm mt-2">Path: /images/icons/dog.png</p>
-          </div>
-
-          {/* Album Info */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{album.name}</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{album.name}</h1>
                 {album.description && (
-                  <p className="text-gray-600 mb-4">{album.description}</p>
+                  <p className="text-gray-600 mt-2">{album.description}</p>
                 )}
-                <div className="flex items-center space-x-6 text-sm text-gray-500">
-                  <div className="flex items-center space-x-1">
-                    <Camera className="h-4 w-4" />
-                    <span>{album.photo_count} photos</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <User className="h-4 w-4" />
-                    <span>{getPetName(album.pet_id)}</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>Created {formatDate(album.created_at)}</span>
-                  </div>
+                <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500">
+                  <span className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    {formatDate(album.created_at)}
+                  </span>
+                  <span className="flex items-center">
+                    <Heart className="h-4 w-4 mr-1" />
+                    {album.photo_count} photos
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Photos Grid */}
-          {album.photos.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-200">
-              <Camera className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No photos yet</h3>
-              <p className="text-gray-600 mb-6">Add photos to this album to get started.</p>
-              <button className="flex items-center space-x-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors mx-auto">
-                <Plus className="h-4 w-4" />
-                <span>Add First Photo</span>
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {album.photos.map((photo) => (
-                <motion.div
-                  key={photo.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="relative group cursor-pointer"
-                  onClick={() => handleViewPhoto(photo)}
-                >
-                  <div className="aspect-square rounded-lg overflow-hidden bg-white border-2 border-gray-300 shadow-lg">
-                    <img
-                      src={photo.file_path}
-                      alt={photo.caption || photo.original_filename}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                      style={{ 
-                        backgroundColor: 'white',
-                        display: 'block',
-                        minHeight: '100%',
-                        minWidth: '100%'
-                      }}
-                      onLoad={(e) => {
-                        console.log('✅ Image loaded successfully:', photo.file_path)
-                        e.currentTarget.style.opacity = '1'
-                        e.currentTarget.style.backgroundColor = 'transparent'
-                      }}
-                      onError={(e) => {
-                        console.log('❌ Image failed to load:', photo.file_path)
-                        e.currentTarget.style.display = 'none'
-                        // Show a placeholder
-                        const placeholder = document.createElement('div')
-                        placeholder.className = 'w-full h-full flex items-center justify-center bg-red-100 text-red-500 text-2xl'
-                        placeholder.innerHTML = '❌'
-                        e.currentTarget.parentNode?.appendChild(placeholder)
-                      }}
-                    />
-                  </div>
+          {/* Photo Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {album.photos.map((photo) => (
+              <motion.div
+                key={photo.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative group cursor-pointer bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                onClick={() => setSelectedPhoto(photo)}
+              >
+                <div className="aspect-square relative">
+                  <Image
+                    src={photo.file_path}
+                    alt={photo.caption || photo.filename}
+                    fill
+                    className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority
+                  />
                   
-                  {/* Photo Info Overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-end">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 text-white w-full">
-                      <p className="text-sm font-medium truncate">{photo.caption || photo.original_filename}</p>
-                      <p className="text-xs text-gray-200">{formatDate(photo.created_at)}</p>
-                    </div>
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-200" />
+                  
+                  {/* Actions */}
+                  <div className="absolute bottom-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        // Handle download
+                      }}
+                      className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Download className="h-4 w-4 text-gray-700" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        // Handle share
+                      }}
+                      className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Share2 className="h-4 w-4 text-gray-700" />
+                    </button>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+                </div>
+
+                {/* Photo Info */}
+                <div className="p-4">
+                  {photo.caption && (
+                    <p className="font-medium text-gray-900 mb-1">{photo.caption}</p>
+                  )}
+                  <p className="text-sm text-gray-500">{formatDate(photo.created_at)}</p>
+                  
+                  {photo.tags && photo.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {photo.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                        >
+                          <Tag className="h-3 w-3 mr-1" />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </main>
-
-      {/* Full-Screen Photo Viewer */}
-      <AnimatePresence>
-        {showPhotoViewer && selectedPhoto && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-900/95 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={handleClosePhotoViewer}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-5xl max-h-[90vh] w-full h-full flex flex-col"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={handleClosePhotoViewer}
-                className="absolute top-4 right-4 z-10 p-3 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all duration-200 border border-white/20"
-              >
-                <X className="h-6 w-6" />
-              </button>
-              
-              <div className="flex-1 flex items-center justify-center p-8">
-                <div className="relative">
-                  <img
-                    src={selectedPhoto.file_path}
-                    alt={selectedPhoto.caption || selectedPhoto.original_filename}
-                    className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
-                    style={{ maxHeight: '70vh' }}
-                  />
-                </div>
-              </div>
-              
-              <div className="absolute bottom-4 left-4 right-4 bg-white/10 backdrop-blur-md text-white p-6 rounded-xl border border-white/20 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">{selectedPhoto.caption || selectedPhoto.original_filename}</h3>
-                    <p className="text-sm text-gray-300">
-                      {formatFileSize(selectedPhoto.file_size)} • {formatDate(selectedPhoto.created_at)}
-                    </p>
-                    {selectedPhoto.tags && selectedPhoto.tags.length > 0 && (
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Tag className="h-4 w-4" />
-                        <div className="flex space-x-2">
-                          {selectedPhoto.tags.map((tag, index) => (
-                            <span key={index} className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium border border-white/30">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => handleDownload(selectedPhoto)}
-                      className="p-3 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all duration-200 border border-white/20"
-                      title="Download"
-                    >
-                      <Download className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => handleShare(selectedPhoto)}
-                      className="p-3 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all duration-200 border border-white/20"
-                      title="Share"
-                    >
-                      <Share2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }

@@ -413,7 +413,7 @@ export default function Dashboard() {
                         </p>
                       </div>
                       <span className="dashboard-activity-type">
-                        {activity.type}
+                        {(activity as any).type || 'Activity'}
                       </span>
                     </motion.div>
                   ))
