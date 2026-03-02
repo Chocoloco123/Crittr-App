@@ -44,6 +44,9 @@ interface Attachment {
   url: string
   name: string
   size: number
+  /** Backend format: optional fields for API response shape */
+  original_filename?: string
+  file_size?: number
 }
 
 interface JournalEditorProps {
