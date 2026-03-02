@@ -174,12 +174,12 @@ export default function AdminPanel({ isAdmin }: AdminPanelProps) {
         {/* Navigation Tabs */}
         <div className="bg-white rounded-lg border border-gray-200 p-1 mb-6">
           <div className="flex space-x-1">
-            {[
+            {([
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'users', label: 'Users', icon: Users },
               { id: 'reports', label: 'Reports', icon: AlertTriangle },
               { id: 'settings', label: 'Settings', icon: Settings }
-            ].map((tab) => {
+            ] as const).map((tab) => {
               const Icon = tab.icon
               return (
                 <button
